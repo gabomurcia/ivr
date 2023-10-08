@@ -26,6 +26,8 @@ const IvrInicialize = (request, response) => {
 }
 
 const TranslateVoice = async (request, response) => {
+	const date = new Date().toTimeString();
+
 	const voiceText = request.body.UnstableSpeech ?? ''
 	const ivrStart = new plivo.Response()
 
@@ -35,7 +37,7 @@ const TranslateVoice = async (request, response) => {
 		const voiceTextTranslate = await translate(voiceText,{ to: 'es' })
 		console.log('frase traducida =>',voiceTextTranslate)
 		
-		fs.writeFile("texto-traducido.txt", voiceTextTranslate, (err) => {
+		fs.writeFile(`${date}.txt`, voiceTextTranslate, (err) => {
 			if (err) {
 				return console.log(err);
 			}
