@@ -1,7 +1,9 @@
 const plivo = require('plivo');
 const settingVoice = require('./setting-voice');
 const fs = require('fs');
-const translate = require('translate-google')
+const translate = require('translate-google');
+const { format } = require('fecha');
+
 
 const IvrInicialize = (request, response) => {
 	const ivrStart = new plivo.Response();
@@ -26,7 +28,7 @@ const IvrInicialize = (request, response) => {
 }
 
 const TranslateVoice = async (request, response) => {
-	const date = new Date().toTimeString();
+	const date = format( new Date(), 'dddd, DD-MM-YYYY hh:mm:ss.SSS A')
 
 	const voiceText = request.body.UnstableSpeech ?? ''
 	const ivrStart = new plivo.Response()
@@ -37,7 +39,7 @@ const TranslateVoice = async (request, response) => {
 		const voiceTextTranslate = await translate(voiceText,{ to: 'es' })
 		console.log('frase traducida =>',voiceTextTranslate)
 		
-		fs.writeFile(`${date}.txt`, voiceTextTranslate, (err) => {
+		fs.writeFile(`/textos/${date}.txt`, voiceTextTranslate, (err) => {
 			if (err) {
 				return console.log(err);
 			}
