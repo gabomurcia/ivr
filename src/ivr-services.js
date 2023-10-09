@@ -28,8 +28,19 @@ const IvrInicialize = (request, response) => {
 }
 
 const TranslateVoice = async (request, response) => {
-	const meridaDate = new Date().toLocaleString('en-US', { timeZone: 'America/Merida' });
-	const date = format( meridaDate, 'dddd, DD-MM-YYYY hh:mm:ss A', 'America/Merida')
+	const timeZone = 'America/Merida';
+	const meridaDate = new Date().toLocaleString('en-US', { timeZone: timeZone });
+	const formattedDate = new Intl.DateTimeFormat('en-US', {
+	timeZone: timeZone,
+	weekday: 'long',
+	day: '2-digit',
+	month: '2-digit',
+	year: 'numeric',
+	hour: '2-digit',
+	minute: '2-digit',
+	second: '2-digit',
+	hour12: true
+	}).format(new Date(meridaDate));
 
 	const voiceText = request.body.UnstableSpeech ?? ''
 	const ivrStart = new plivo.Response()
@@ -40,7 +51,7 @@ const TranslateVoice = async (request, response) => {
 		const voiceTextTranslate = await translate(voiceText,{ to: 'es' })
 		console.log('frase traducida =>',voiceTextTranslate)
 		
-		fs.writeFile(`textos/${date}.txt`, voiceTextTranslate, (err) => {
+		fs.writeFile(`textos/${formattedDate}.txt`, voiceTextTranslate, (err) => {
 			if (err) {
 				return console.log(err);
 			}
