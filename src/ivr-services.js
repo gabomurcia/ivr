@@ -34,28 +34,28 @@ const TranslateVoice = async (request, response) => {
 	console.log('speech => ', request.body)
 
 	if(voiceText !== ''){
-		const timeZone = 'America/Merida';
-		const meridaDate = new Date().toLocaleString('en-US', { timeZone: timeZone });
-		const formattedDate = new Intl.DateTimeFormat('en-US', {
-			timeZone: timeZone,
-			weekday: 'long',
-			day: '2-digit',
-			month: '2-digit',
-			year: 'numeric',
-			hour: '2-digit',
-			minute: '2-digit',
-			second: '2-digit',
-			hour12: true
-		}).format(new Date(meridaDate));
+		// const timeZone = 'America/Merida';
+		// const meridaDate = new Date().toLocaleString('en-US', { timeZone: timeZone });
+		// const formattedDate = new Intl.DateTimeFormat('en-US', {
+		// 	timeZone: timeZone,
+		// 	weekday: 'long',
+		// 	day: '2-digit',
+		// 	month: '2-digit',
+		// 	year: 'numeric',
+		// 	hour: '2-digit',
+		// 	minute: '2-digit',
+		// 	second: '2-digit',
+		// 	hour12: true
+		// }).format(new Date(meridaDate));
 	
-		const filePath = path.resolve(__dirname, `${formattedDate.replace(/[, :/]/g, ' ')}.txt`);
+		// const filePath = path.resolve(__dirname, `${formattedDate.replace(/[, :/]/g, ' ')}.txt`);
 
 		
 		console.log('frase original =>', voiceText)
 		const voiceTextTranslate = await translate(voiceText,{ to: 'es' })
 		console.log('frase traducida =>',voiceTextTranslate)
 		
-		fs.writeFileSync(filePath, voiceTextTranslate, 'utf-8');
+		// fs.writeFileSync(filePath, voiceTextTranslate, 'utf-8');
 	}
 
 	ivrStart.addSpeak(settingVoice.operationEnglish)
