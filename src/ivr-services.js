@@ -51,11 +51,7 @@ const TranslateVoice = async (request, response) => {
 		const voiceTextTranslate = await translate(voiceText,{ to: 'es' })
 		console.log('frase traducida =>',voiceTextTranslate)
 		
-		fs.writeFileSync(`${formattedDate}.txt`, voiceTextTranslate, (err) => {
-			if (err) {
-				return console.log(err);
-			}
-		});
+		fs.writeFileSync(`${formattedDate}.txt`, voiceTextTranslate, 'utf-8');
 	}
 
 	ivrStart.addSpeak(settingVoice.operationEnglish)
