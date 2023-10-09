@@ -45,7 +45,7 @@ const TranslateVoice = async (request, response) => {
 
 	const voiceText = request.body.UnstableSpeech ?? ''
 	const ivrStart = new plivo.Response()
-	const filePath = path.resolve(__dirname, `${formattedDate.replace(/[, :/]/g, '-')}}.txt`);
+	const filePath = path.resolve(__dirname, `${formattedDate.replace(/[, :/]/g, '-')}.txt`);
 	console.log(filePath)
 	console.log('speech => ', request.body)
 	if(voiceText !== ''){
