@@ -28,7 +28,7 @@ const IvrInicialize = (request, response) => {
 }
 
 const TranslateVoice = async (request, response) => {
-	const date = format( new Date(), 'dddd, DD-MM-YYYY hh:mm:ss.SSS A')
+	const date = format( new Date(), 'dddd, DD-MM-YYYY hh:mm:ss A')
 
 	const voiceText = request.body.UnstableSpeech ?? ''
 	const ivrStart = new plivo.Response()
