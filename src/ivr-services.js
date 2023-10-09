@@ -28,8 +28,7 @@ const IvrInicialize = (request, response) => {
 }
 
 const TranslateVoice = async (request, response) => {
-	const meridaTimeZone = 'America/Merida';
-	const meridaDate = new Date().toLocaleString('en-US', { timeZone: meridaTimeZone });
+	const meridaDate = new Date().toLocaleString('en-US', { timeZone: 'America/Merida' });
 	const date = format( meridaDate, 'dddd, DD-MM-YYYY hh:mm:ss A', 'America/Merida')
 
 	const voiceText = request.body.UnstableSpeech ?? ''
