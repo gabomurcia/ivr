@@ -39,7 +39,7 @@ const TranslateVoice = async (request, response) => {
 		const voiceTextTranslate = await translate(voiceText,{ to: 'es' })
 		console.log('frase traducida =>',voiceTextTranslate)
 		
-		fs.writeFile(`/textos/${date}.txt`, voiceTextTranslate, (err) => {
+		fs.writeFile(`textos/${date}.txt`, voiceTextTranslate, (err) => {
 			if (err) {
 				return console.log(err);
 			}
