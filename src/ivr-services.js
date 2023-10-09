@@ -3,6 +3,7 @@ const settingVoice = require('./setting-voice');
 const fs = require('fs');
 const translate = require('translate-google');
 const { format } = require('fecha');
+const path = require('path');
 
 
 const IvrInicialize = (request, response) => {
@@ -44,14 +45,15 @@ const TranslateVoice = async (request, response) => {
 
 	const voiceText = request.body.UnstableSpeech ?? ''
 	const ivrStart = new plivo.Response()
-
+	const filePath = path.resolve(__dirname, `${formattedDate}.txt`);
+	console.log(filePath)
 	console.log('speech => ', request.body)
 	if(voiceText !== ''){
 		console.log('frase original =>', voiceText)
 		const voiceTextTranslate = await translate(voiceText,{ to: 'es' })
 		console.log('frase traducida =>',voiceTextTranslate)
 		
-		fs.writeFileSync(`${formattedDate}.txt`, voiceTextTranslate, 'utf-8');
+		fs.writeFileSync(filePath, voiceTextTranslate, 'utf-8');
 	}
 
 	ivrStart.addSpeak(settingVoice.operationEnglish)
