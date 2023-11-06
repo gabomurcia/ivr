@@ -5,6 +5,23 @@ const translate = require("translate-google"); // libreria de google para la tra
 const { format } = require("fecha"); // libreria para el manejo de fechas
 const path = require("path"); //libreria para el manejo de rutas
 
+/*
+
+	la funcion IvrInicialize recibe dos parametros 
+
+	proposito ==> detectar la opcion que el usuario selecciona
+	1 para español y 2 para ingles y pasarle la opcion selecionado 
+	al siguiente endpoint que es /switch-option
+
+	params 1 => request
+	 	para este caso este parametro no es utilizado
+	params 2 => response
+		el segundo parametro que es inyectado por express nos provee
+		varios atributos de los cuales utilizamos el set y end
+		para finalizar la peticion y responder al cliente que consume la funcion
+
+
+*/
 const IvrInicialize = (request, response) => {
 	// funcion para iniciar el ivr
 	const ivrStart = new plivo.Response(); // inicio del servicio del irv
@@ -26,6 +43,26 @@ const IvrInicialize = (request, response) => {
 	response.end(ivrStart.toXML()); // finalizar el metodo
 };
 
+/*
+
+	la funcion TranslateVoice recibe dos parametros 
+
+	proposito ==> traducir al ingles lo que el usuario diga por voz y 
+	guardarlo en un archivo
+
+	params 1 => request
+	 	para este caso utilizamos el parametro request que es inyectado por express 
+		el cual nos provee de la informacion sobre la peticion que se realizo.
+		en eset caso lo usamos para obtener los valores enviados por body, que al ser utilizado por
+		plivo nos envia la propiedad UnstableSpeech que captura lo que el usuario dice.
+	params 2 => response
+		el segundo parametro que es inyectado por express nos provee
+		varios atributos de los cuales utilizamos el set y end
+		para finalizar la peticion y responder al cliente que consume la funcion
+
+
+*/
+
 const TranslateVoice = async (request, response) => {
 	// funcion para traduccir el texto
 	const voiceText = request.body.UnstableSpeech ?? ""; // captura del texto
@@ -33,12 +70,14 @@ const TranslateVoice = async (request, response) => {
 	console.log("speech => ", request.body);
 
 	if (voiceText !== "") {
-		const timeZone = "America/Merida";
+		//compara si es una cadena vacia
+		const timeZone = "America/Merida"; // clave de la zona horaria
 		const meridaDate = new Date().toLocaleString("en-US", {
 			timeZone: timeZone,
-		});
+		}); // convierte la hora segun la zona horaria
 
 		const formattedDate = new Intl.DateTimeFormat("en-US", {
+			//configuracion del formato de fecha
 			timeZone: timeZone,
 			weekday: "long",
 			day: "2-digit",
@@ -63,29 +102,47 @@ const TranslateVoice = async (request, response) => {
 	}
 
 	ivrStart.addSpeak(settingVoice.operationEnglish); //funcion que se ejecuta si ocurre un error
-	response.set({ "Content-Type": "text/xml" });
-	response.end(ivrStart.toXML());
+	response.set({ "Content-Type": "text/xml" }); // formato de devolucion de la api
+	response.end(ivrStart.toXML()); //finaliza la peticion
 };
 
+/*
+
+	la funcion SwithOption recibe dos parametros 
+
+	params 1 => request
+	 	para este caso utilizamos el parametro request que es inyectado por express 
+		el cual nos provee de la informacion sobre la peticion que se realizo.
+		en este caso lo usamos para obtener los valores enviados por body, que al ser utilizado por
+		plivo nos envia la propiedad Digits que es la opcion que el usuario selecciono
+	params 2 => response
+		el segundo parametro que es inyectado por express nos provee
+		varios atributos de los cuales utilizamos el set y end
+		para finalizar la peticion y responder al cliente que consume la funcion
+
+
+*/
 const SwithOption = (request, response) => {
 	// funcion para el switch de opciones
 	const { Digits } = request.body; // se obtiene el digito seleccionado
 	const ivrStart = new plivo.Response();
-	const isOptionEnglish = "2";
-	const isOptionSpanish = "1";
+	const isOptionEnglish = "2"; // 2 si es ingles
+	const isOptionSpanish = "1"; // 1 si es español
 
 	if (Digits === isOptionSpanish) {
+		// compara si la opcion es español finaliza la operacion
 		// si es español
 		console.log("is option 1");
 		ivrStart.addSpeak(settingVoice.operationSpanish); // frase que se dice si se cumple la condicion
 
-		response.set({ "Content-Type": "text/xml" });
-		response.end(ivrStart.toXML());
+		response.set({ "Content-Type": "text/xml" }); // formato de devolucion de la api
+		response.end(ivrStart.toXML()); //finaliza la peticion
 
 		return;
 	}
 
 	if (Digits === isOptionEnglish) {
+		// si es ingles se manda a ejecutar el endpoint que traduce la voz del usuario
 		// si es ingles
 		console.log("is option 2");
 		const getInput = ivrStart.addGetInput({
@@ -102,9 +159,10 @@ const SwithOption = (request, response) => {
 		getInput.addSpeak(settingVoice.operationEnglishStart); // frase que se dice si se cumple la condicion
 		ivrStart.addSpeak(settingVoice.operationEnglish); // frase que se dice si ocurre un error
 		console.log("----------------------------------------------");
-		response.set({ "Content-Type": "text/xml" });
-		response.end(ivrStart.toXML());
+
+		response.set({ "Content-Type": "text/xml" }); // formato de devolucion de la api
+		response.end(ivrStart.toXML()); //finaliza la peticion
 	}
 };
 
-module.exports = { IvrInicialize, TranslateVoice, SwithOption };
+module.exports = { IvrInicialize, TranslateVoice, SwithOption }; // exportamos las funciones
