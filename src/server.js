@@ -17,7 +17,7 @@ app.use(bodyParser.urlencoded({ extended: false })); // configuracion para el us
 
 app.all("/call", IvrInicialize); // endpoint inicial para mandar a llamar al servicio de selecicon de digitios
 app.post("/switch-option", SwithOption); // endpoint para el switch de opciones 1 para español y 2 para ingles
-app.post("/translate", TranslateVoice); // endpoint que traduce el idioma
+app.post("/translate/:id", TranslateVoice); // endpoint que traduce el idioma
 
 app.listen(app.get("port"), () => {
 	// inciar la api
